@@ -1,0 +1,51 @@
+#include <fstream>
+#include <queue>
+#include <vector>
+using namespace std;
+int main () {
+  ifstream input ("in.txt");
+	ofstream output ("out.txt");
+	int n;
+	input>>n;
+	int **a=new int *[n];
+	bool* used=new bool[n];
+	for(int i=0;i<n;i++){
+		a[i]=new int[n];
+		used[i]=false;
+		for(int j=0;j<n;j++)
+			input>>a[i][j];
+	}
+	input.close();
+	vector<vector<int>> comps;
+	for (int start=0;start<n;start++){
+		if (used[start])
+			continue;
+		queue <int> q;
+		comps.push_back(vector<int>());
+		q.push(start);
+		used[start]=true;
+		while (!q.empty()) 
+		{
+			int current=q.front();
+			q.pop();
+			comps[comps.size()-1].push_back(current);
+			for (int i=0; i<n; i++) 
+			{
+				if (!used[i] && a[current][i]==1) 
+				{
+					used[i]=true;
+					q.push(i);
+				}
+			}
+		}
+	}
+	output<<comps.size()<<endl;
+	for (size_t i=0; i<comps.size(); i++) {
+		//sort(comps[i].begin(),comps[i].end());
+		for (size_t j=0; j<comps[i].size(); j++)
+			output<<comps[i][j]+1<<' ';
+		output<<0<<endl;
+	}
+	output.close();
+	return 0;
+}
